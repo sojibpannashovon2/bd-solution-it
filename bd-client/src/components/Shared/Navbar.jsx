@@ -77,6 +77,15 @@ const Navbar = () => {
           >
             Dashboard
           </Link>
+          <Link
+            to={`/login`}
+            href="#"
+            className={`toggle ${
+              isMenuOpen ? "flex" : "hidden md:flex"
+            } w-full md:w-auto px-4 py-2 text-right bg-green-900 hover:bg-green-500 text-white md:rounded`}
+          >
+            Login Now
+          </Link>
         </nav>
       </Container>
     </>
