@@ -1,74 +1,121 @@
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
-
-import { GoogleAuthProvider } from "firebase/auth";
 import app from "../Firebase/firebase.config";
 
-export const authContext = createContext(null);
+// import { getRole } from "../Api/auth";
+// import axios from "axios";
+export const AuthContext = createContext(null);
+
 const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const googleProvider = new GoogleAuthProvider();
+  //Load user role
+  // useEffect(() => {
+  //   if (user) {
+  //     getRole(user.email).then((data) => setRole(data));
+  //   }
+  // }, [user]);
 
   const createUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const logIn = (email, password) => {
+  const signIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const logout = () => {
+  const signInWithGoogle = () => {
     setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
+  const resetPassword = (email) => {
+    setLoading(true);
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  const logOut = () => {
+    setLoading(true);
+    localStorage.removeItem("access-token");
     return signOut(auth);
   };
+
   const updateUserProfile = (name, photo) => {
-    setLoading(true);
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
     });
   };
 
-  const googleSignIn = () => {
-    setLoading(true);
-    return signInWithPopup(auth, googleProvider);
-  };
   useEffect(() => {
-    const unsuscribed = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      // console.log("CurentUser:-", currentUser);
+      // if (currentUser && currentUser?.email) {
+      //   // fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
+      //   //   method: "POST",
+      //   //   headers: {
+      //   //     "content-type": "application/json",
+      //   //   },
+      //   //   body: JSON.stringify({ email: currentUser.email }),
+      //   // }).then(res => res.json())
+      //   //   .then(data => {
 
-      setLoading(false);
+      //   //     console.log(data)
+      //   //     localStorage.setItem("access-token", data.token)
+      //   //   })
+      //   axios
+      //     .post(`${import.meta.env.VITE_API_URL}/jwt`, {
+      //       email: currentUser?.email,
+      //     })
+      //     .then((data) => {
+      //       // console.log(data.data.token);
+      //       localStorage.setItem("access-token", data.data.token);
+      //       setLoading(false);
+      //     });
+      // } else {
+      //   localStorage.removeItem("access-token");
+      //   setLoading(false);
+      // }
+      // console.log('current user', currentUser)
     });
     return () => {
-      return unsuscribed;
+      return unsubscribe();
     };
   }, []);
 
   const authInfo = {
+    // role,
+    // setRole,
+    setLoading,
+    createUser,
+    signIn,
+    signInWithGoogle,
+    resetPassword,
+    logOut,
+    updateUserProfile,
     user,
     loading,
-    createUser,
-    logIn,
-    logout,
-    updateUserProfile,
-    googleSignIn,
   };
+
   return (
-    <authContext.Provider value={authInfo}>{children}</authContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 

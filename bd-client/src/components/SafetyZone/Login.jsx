@@ -4,11 +4,13 @@ import { FcGoogle } from "react-icons/fc";
 import { useContext, useRef } from "react";
 
 import { TbFidgetSpinner } from "react-icons/tb";
+import { AuthContext } from "../../Providers/AuthProvider";
+
 // import { saveUser } from "../../Api/auth";
-import { authContext } from "../../Providers/AuthProvider";
+
 const Login = () => {
   const { loading, setLoading, signIn, signInWithGoogle, resetPassword } =
-    useContext(authContext);
+    useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const emailRef = useRef();
