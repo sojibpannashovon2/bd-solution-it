@@ -1,72 +1,42 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ImSpinner4 } from "react-icons/im";
-import { FcGoogle } from "react-icons/fc";
-import { useContext } from "react";
-
+import axios from "axios";
 import toast from "react-hot-toast";
-// import { saveUser } from "../../Api/auth";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 
 const Signup = () => {
+  const { loading } = useContext(AuthContext);
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location?.state?.pathname || "/";
-  const {
-    setLoading,
-    createUser,
-    signInWithGoogle,
-    updateUserProfile,
-    loading,
-  } = useContext(AuthContext);
+  const [user, setUser] = useState([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
-  //Handle SignUp Function
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = () => {
+    axios.get(`http://localhost:7001/register`).then((res) => {
+      console.log(res.data);
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
-    const password = event.target.password.value;
-    const name = event.target.name.value;
-    const image = event.target.photo.value;
-
-    //image upload
-
-    createUser(email, password)
-      .then((loggedUser) => {
-        // console.log(loggedUser.user);
-        updateUserProfile(name, image)
-          .then(() => {
-            //save the user to dataBase
-
-            toast.success(`SignUp successfull`);
-            // saveUser(loggedUser?.user);
-          })
-          .catch((err) => {
-            setLoading(false);
-            console.log(err.message);
-            toast.error(err.message);
-          });
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err.message);
-        toast.error(err.message);
+    axios
+      .post(`http://localhost:7001/register`, { email, userName, password })
+      .then(() => {
+        toast.success("Registration successfull");
+        setEmail();
+        setUserName();
+        setPassword();
+        fetchUser();
+        navigate(`/`);
       });
   };
-  //handle google signin
-  const handleGoogleSign = () => {
-    signInWithGoogle()
-      .then((result) => {
-        console.log(result?.user);
-        //save the user to dataBase
-        saveUser(result?.user);
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err.message);
-        toast.error(err.message);
-      });
-  };
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="flex flex-col max-w-md px-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
@@ -89,20 +59,9 @@ const Signup = () => {
                 type="text"
                 name="name"
                 id="name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
                 placeholder="Enter Your Name Here"
-                className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
-                data-temp-mail-org="0"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block mb-2 text-sm">
-                photo
-              </label>
-              <input
-                type="text"
-                name="photo"
-                id="photo"
-                placeholder="Enter Your Photo URL Here"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
                 data-temp-mail-org="0"
               />
@@ -118,6 +77,8 @@ const Signup = () => {
                 id="email"
                 required
                 placeholder="Enter Your Email Here"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
                 data-temp-mail-org="0"
               />
@@ -134,6 +95,8 @@ const Signup = () => {
                 id="password"
                 required
                 placeholder="*******"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
               />
             </div>
@@ -152,21 +115,7 @@ const Signup = () => {
             </button>
           </div>
         </form>
-        <div className="flex items-center pt-4 space-x-1">
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-          <p className="px-3 text-sm dark:text-gray-400">
-            Signup with social accounts
-          </p>
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-        </div>
-        <div
-          onClick={handleGoogleSign}
-          className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
-        >
-          <FcGoogle size={32} />
 
-          <p>Continue with Google</p>
-        </div>
         <p className="px-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
           <Link
