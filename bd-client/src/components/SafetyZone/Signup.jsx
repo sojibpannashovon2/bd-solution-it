@@ -12,14 +12,14 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
-
+  console.log(user);
   useEffect(() => {
     fetchUser();
   }, []);
 
   const fetchUser = () => {
     axios.get(`http://localhost:7001/register`).then((res) => {
-      console.log(res.data);
+      setUser(res.data);
     });
   };
 

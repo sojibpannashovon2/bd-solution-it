@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import Container from "./Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const isUserAvailable = !!localStorage.getItem("token");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/dashboard");
   };
 
   return (
@@ -44,48 +51,69 @@ const Navbar = () => {
             } text-right text-bold mt-5 md:mt-0 border-t-2 border-blue-900 md:border-none`}
           >
             <Link
+              to={`/`}
               href="#"
-              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-2xl font-semibold"
+              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-xl font-semibold"
             >
               Home
             </Link>
             <Link
+              to={`/about`}
               href="#"
-              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-2xl font-semibold"
+              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-xl font-semibold"
             >
               About
             </Link>
             <Link
               href="#"
-              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-2xl font-semibold"
+              to={`/contact`}
+              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-xl font-semibold"
             >
               Contact
             </Link>
             <Link
               href="#"
-              className="block md:inline-block text-blue-900 px-3 py-1 border-b-2 border-blue-900 hover:text-slate-200 md:border-none text-2xl font-semibold"
+              to={`/service`}
+              className="block md:inline-block text-blue-900 px-3 py-1 border-b-2 border-blue-900 hover:text-slate-200 md:border-none text-xl font-semibold"
             >
               Our Services
             </Link>
           </div>
-          <Link
-            to={`/dashboard`}
-            href="#"
-            className={`toggle ${
-              isMenuOpen ? "flex" : "hidden md:flex"
-            } w-full md:w-auto px-4 py-2 text-right bg-blue-900 hover:bg-blue-500 text-white md:rounded`}
-          >
-            Dashboard
-          </Link>
-          <Link
-            to={`/login`}
-            href="#"
-            className={`toggle ${
-              isMenuOpen ? "flex" : "hidden md:flex"
-            } w-full md:w-auto px-4 py-2 text-right bg-green-900 hover:bg-green-500 text-white md:rounded`}
-          >
-            Login Now
-          </Link>
+
+          {isUserAvailable ? (
+            <>
+              <div className="flex justify-center items-center gap-6 mr-8">
+                <Link
+                  to={`/dashboard`}
+                  href="#"
+                  className={`toggle ${
+                    isMenuOpen ? "flex" : "hidden md:flex"
+                  } w-full md:w-auto px-4 py-1 text-right bg-blue-900 hover:bg-blue-500 text-white rounded-md`}
+                >
+                  Dashboard
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="border border-slate-700 px-4 py-1 font-semibold rounded-md bg-red-400 hover:bg-red-600"
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                to={`/login`}
+                href="#"
+                className={`toggle ${
+                  isMenuOpen ? "flex" : "hidden md:flex"
+                } w-full md:w-auto px-4 py-1 text-right bg-green-900 hover:bg-green-500 text-white rounded-md`}
+              >
+                Login Now
+              </Link>
+            </>
+          )}
         </nav>
       </Container>
     </>
