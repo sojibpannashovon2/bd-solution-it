@@ -12,13 +12,13 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
-  console.log(user);
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   const fetchUser = () => {
-    axios.get(`http://localhost:7001/register`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/register`).then((res) => {
       setUser(res.data);
     });
   };
@@ -26,7 +26,11 @@ const Signup = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post(`http://localhost:7001/register`, { email, userName, password })
+      .post(`${import.meta.env.VITE_API_URL}/register`, {
+        email,
+        userName,
+        password,
+      })
       .then(() => {
         toast.success("Registration successfull");
         setEmail();

@@ -15,6 +15,7 @@ const Login = () => {
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  console.log(email);
   const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
@@ -23,7 +24,7 @@ const Login = () => {
 
   const fetchUser = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/register`).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setLoading(false);
     });
   };

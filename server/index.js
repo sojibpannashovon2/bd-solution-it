@@ -15,6 +15,7 @@ const jwt = require("jsonwebtoken");
 
 //helps to error free between database and api creation
 const cors = require("cors");
+const { ObjectId } = require("mongodb");
 
 //conect to express
 
@@ -99,3 +100,12 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Error Login" });
   }
 });
+
+//Get the specefic Login user details
+
+// app.get("/login/:email", async (req, res) => {
+//   const email = req.params.email;
+//   const query = { email: email };
+//   const result = await User.findOne(query);
+//   res.send(result);
+// });
