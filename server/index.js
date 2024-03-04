@@ -86,26 +86,62 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ error: "Invaild credenttials" });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-    const isPasswordVaild = await bcript.compare(password, user.password);
-    if (!isPasswordVaild) {
-      return res.status(401).json({ error: "Invaild credenttials" });
+
+    const isPasswordValid = await bcript.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
       expiresIn: "1hr",
     });
-    res.json({ message: "Login Successfull" });
+    /// At first i did not send the token to the server that's why in application token are showing undefine
+    res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: "Error Login" });
+    res.status(500).json({ error: "Error logging in" });
   }
 });
 
-//Get the specefic Login user details
+// Middleware for authentication
+const authenticateUser = (req, res, next) => {
+  // Check if authentication token or session data is present in request headers or cookies
+  const token = req.headers.authorization; // Example: "Bearer <token>"
+  // Verify the token or session data
+  if (token) {
+    // If using JWT, verify and decode the token
+    jwt.verify(
+      token.split(" ")[1],
+      process.env.JWT_TOKEN,
+      (err, decodedToken) => {
+        if (err) {
+          res.status(401).json({ message: "Unauthorized" });
+        } else {
+          // Extract user ID from the decoded token
+          req.userId = decodedToken.userId;
+          next(); // Proceed to the next middleware or route handler
+        }
+      }
+    );
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+};
 
-// app.get("/login/:email", async (req, res) => {
-//   const email = req.params.email;
-//   const query = { email: email };
-//   const result = await User.findOne(query);
-//   res.send(result);
-// });
+// Route handler to fetch user information
+app.get("/user/profile", authenticateUser, (req, res) => {
+  const userId = req.userId;
+  // Use userId to query the MongoDB database for user information
+  User.findById(userId)
+    .then((user) => {
+      if (user) {
+        res.json({ user });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});

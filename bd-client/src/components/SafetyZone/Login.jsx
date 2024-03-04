@@ -31,25 +31,26 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
-      email,
-      password,
-    });
-    const token = response.data.token;
     try {
-      toast.success("Login successfull");
+      const response = await axios.post("http://localhost:7001/login", {
+        email,
+        password,
+      });
+      const token = response.data.token;
+      localStorage.setItem("token", token); // Store the token in local storage
+      toast.success("Login successful");
 
-      setEmail();
-      setPassword();
+      setEmail("");
+      setPassword("");
       fetchUser();
 
       navigate(`/`);
       window.location.reload();
-      localStorage.setItem("token", token);
     } catch (error) {
       toast.error("Login Error found");
     }
   };
+
   return (
     <div className="flex justify-center items-center min-h-screen pt-2 shadow-lg">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
