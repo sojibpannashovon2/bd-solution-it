@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import React from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
@@ -8,35 +9,65 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [userData, setUserData] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token")
+  );
+
+  const logOut = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
 
   // UserProfile Component
-
+  const [userData, setUserData] = useState(null);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get("http://localhost:7001/user/profile", {
+    fetchUserData(setUserData);
+  }, []);
+
+  const getUserData = async (token) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/profile`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((response) => {
-          setUserData(response.data.user);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
+        }
+      );
+      return response.data.user;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      toast.error("Error fetching user data:", error);
+      return null;
     }
-  }, []);
+  };
+
+  const fetchDataWithToken = async (token, setData) => {
+    const userData = await getUserData(token);
+    setData(userData);
+  };
+
+  const fetchUserData = async (setData) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchDataWithToken(token, setData);
+    } else {
+      // Handle unauthorized access
+      console.error("Unauthorized access: No token found");
+      toast.error("Unauthorized access: No token found");
+    }
+  };
+
   console.log(userData);
   const authInfo = {
     // role,
     // setRole,
     setLoading,
-
+    isAuthenticated,
+    logOut,
     user,
     loading,
+    userData,
   };
 
   return (

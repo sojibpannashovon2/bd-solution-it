@@ -15,7 +15,7 @@ const Login = () => {
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  console.log(email);
+  // console.log(email);
   const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
@@ -32,10 +32,13 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:7001/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/login`,
+        {
+          email,
+          password,
+        }
+      );
       const token = response.data.token;
       localStorage.setItem("token", token); // Store the token in local storage
       toast.success("Login successful");

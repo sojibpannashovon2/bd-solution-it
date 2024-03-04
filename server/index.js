@@ -6,7 +6,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 //password hashing
 const bcript = require("bcrypt");
-//hepls to data to json
+//helps to data to json
 const bodyParser = require("body-parser");
 //conect to schema
 const User = require("./myModel/userSchema");

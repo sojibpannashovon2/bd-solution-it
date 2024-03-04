@@ -37,7 +37,7 @@ const Signup = () => {
         setUserName();
         setPassword();
         fetchUser();
-        navigate(`/`);
+        navigate(`/login`);
       });
   };
 

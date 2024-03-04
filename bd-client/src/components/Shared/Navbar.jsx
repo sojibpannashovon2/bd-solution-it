@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Container from "./Container";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const isUserAvailable = !!localStorage.getItem("token");
+  const { isAuthenticated, logOut } = useContext(AuthContext); // Use the useAuth hook
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -12,7 +14,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logOut(); // Call the logout function from AuthContext
     navigate("/dashboard");
   };
 
@@ -80,7 +82,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {isUserAvailable ? (
+          {isAuthenticated ? (
             <>
               <div className="flex justify-center items-center gap-6 mr-8">
                 <Link
