@@ -9,6 +9,8 @@ import About from "../Pages/About/About";
 import Contact from "../Pages/Contact/Contact";
 import Service from "../Pages/Service/Service";
 import Blog from "../Pages/Blog/Blog";
+import DashboardLayout from "../Layout/DashboardLayout";
+import ManageUser from "../Dashboard/components/ManageUser";
 
 const router = createBrowserRouter([
   {
@@ -47,7 +49,29 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <Dashboard />,
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "/dashboard/blog",
+        element: <Blog />,
+      },
+      {
+        path: "/dashboard/about",
+        element: <About />,
+      },
+      {
+        path: "/dashboard/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/dashboard/service",
+        element: <Service />,
+      },
+      {
+        path: "/dashboard/manage_user",
+        element: <ManageUser />,
+      },
+    ],
   },
 ]);
 

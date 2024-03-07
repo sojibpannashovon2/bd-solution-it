@@ -2,27 +2,52 @@ import { createContext, useEffect, useState } from "react";
 import React from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+// import Loader from "../components/Shared/Loader";
+import { useQuery } from "@tanstack/react-query";
+
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  // const navigate = useNavigate();
+  // const axiosSecure = useAxiosSecure(navigate);
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
   );
 
   const logOut = () => {
+    setLoading(true);
     localStorage.removeItem("token");
     setIsAuthenticated(false);
   };
 
+  //tanstack useeProfile component
+
+  // const { data: users = [] } = useQuery({
+  //   queryKey: [],
+  //   enabled: true,
+  //   queryFn: async () => {
+  //     const res = await axios.get(
+  //       `${import.meta.env.VITE_API_URL}/user/profile`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     console.log(res.data);
+  //     return res.data;
+  //   },
+  // });
+
+  // if (isPending) return <Loader />;
+
+  // if (error) return "An error has occurred: " + error.message;
+  // console.log(data);
   // UserProfile Component
   const [userData, setUserData] = useState(null);
-  useEffect(() => {
-    fetchUserData(setUserData);
-  }, []);
 
   const getUserData = async (token) => {
     try {
@@ -34,6 +59,7 @@ const AuthProvider = ({ children }) => {
           },
         }
       );
+      setLoading(true);
       return response.data.user;
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -45,6 +71,7 @@ const AuthProvider = ({ children }) => {
   const fetchDataWithToken = async (token, setData) => {
     const userData = await getUserData(token);
     setData(userData);
+    setLoading(false);
   };
 
   const fetchUserData = async (setData) => {
@@ -57,8 +84,12 @@ const AuthProvider = ({ children }) => {
       toast.error("Unauthorized access: No token found");
     }
   };
+  useEffect(() => {
+    fetchUserData(setUserData);
+    setLoading(false);
+  }, []);
 
-  console.log(userData);
+  // console.log(userData);
   const authInfo = {
     // role,
     // setRole,
