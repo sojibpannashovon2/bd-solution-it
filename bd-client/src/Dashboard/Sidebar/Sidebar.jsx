@@ -56,14 +56,17 @@ const Sidebar = () => {
         <div>
           {/* Branding & Profile Info */}
           <div>
-            <div className="w-full hidden md:flex py-2 justify-center items-center bg-sky-200 mx-auto">
+            <Link
+              to={"/"}
+              className="w-full hidden md:flex py-2 justify-center items-center  mx-auto"
+            >
               <img
-                className="object-cover w-16 h-16 mx-2 rounded-full"
+                className="object-cover "
                 src="../../public/Bd It.png"
                 alt="avatar"
                 referrerPolicy="no-referrer"
               />
-            </div>
+            </Link>
             <div className="flex flex-col items-center mt-4 -mx-2">
               {/* <Link to="/dashboard">
                 <img
