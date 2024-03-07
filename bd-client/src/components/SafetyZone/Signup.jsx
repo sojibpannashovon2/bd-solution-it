@@ -22,7 +22,7 @@ const Signup = () => {
       setUser(res.data);
     });
   };
-
+  console.log(user);
   const handleSubmit = (event) => {
     event.preventDefault();
     axios

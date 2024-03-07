@@ -1,6 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const ManageUser = () => {
+  const [axiosSecure] = useAxiosSecure();
+  const [userData, setUserData] = useState([]);
+
+  const fetchUserData = () => {
+    // getHostsRooms(user?.email)
+    axiosSecure
+      .get(`/register`)
+      .then((data) => {
+        console.log(data);
+        setUserData(data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  console.log(userData);
+
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       try {
+  //         const data = await fetchUserData();
+  //         setUserData(data);
+  //       } catch (error) {
+  //         // Handle error
+  //         console.error("Error fetching user data in UserDataComponent:", error);
+  //       }
+  //     };
+  //     fetchData();
+  //   }, []);
+  //   console.log(userData);
   return (
     <>
       <div className="flex flex-col">

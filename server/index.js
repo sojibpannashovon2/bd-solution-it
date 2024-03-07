@@ -1,4 +1,6 @@
 require(`dotenv`).config();
+
+const morgan = require("morgan");
 //To helps you set up server
 const express = require("express");
 
@@ -15,7 +17,6 @@ const jwt = require("jsonwebtoken");
 
 //helps to error free between database and api creation
 const cors = require("cors");
-const { ObjectId } = require("mongodb");
 
 //conect to express
 
@@ -43,8 +44,32 @@ mongoose
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
+app.use(morgan("dev"));
 
-//database connection
+// Middleware for authentication
+const authenticateUser = (req, res, next) => {
+  // Check if authentication token or session data is present in request headers or cookies
+  const token = req.headers.authorization; // Example: "Bearer <token>"
+  // Verify the token or session data
+  if (token) {
+    // If using JWT, verify and decode the token
+    jwt.verify(
+      token.split(" ")[1],
+      process.env.JWT_TOKEN,
+      (err, decodedToken) => {
+        if (err) {
+          res.status(401).json({ message: "Unauthorized" });
+        } else {
+          // Extract user ID from the decoded token
+          req.userId = decodedToken.userId;
+          next(); // Proceed to the next middleware or route handler
+        }
+      }
+    );
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+};
 
 // Define a route
 app.get("/", (req, res) => {
@@ -54,7 +79,7 @@ app.get("/", (req, res) => {
 //user registration
 //post register
 
-app.post("/register", async (req, res) => {
+app.post("/register", authenticateUser, async (req, res) => {
   try {
     const { email, userName, password } = req.body;
     const hashedPassword = await bcript.hash(password, 10);
@@ -68,7 +93,7 @@ app.post("/register", async (req, res) => {
 
 //Get register user
 
-app.get("/register", async (req, res) => {
+app.get("/register", authenticateUser, async (req, res) => {
   try {
     const user = await User.find();
     res.status(201).json(user);
@@ -103,31 +128,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Error logging in" });
   }
 });
-
-// Middleware for authentication
-const authenticateUser = (req, res, next) => {
-  // Check if authentication token or session data is present in request headers or cookies
-  const token = req.headers.authorization; // Example: "Bearer <token>"
-  // Verify the token or session data
-  if (token) {
-    // If using JWT, verify and decode the token
-    jwt.verify(
-      token.split(" ")[1],
-      process.env.JWT_TOKEN,
-      (err, decodedToken) => {
-        if (err) {
-          res.status(401).json({ message: "Unauthorized" });
-        } else {
-          // Extract user ID from the decoded token
-          req.userId = decodedToken.userId;
-          next(); // Proceed to the next middleware or route handler
-        }
-      }
-    );
-  } else {
-    res.status(401).json({ message: "Unauthorized" });
-  }
-};
 
 // Route handler to fetch user information
 app.get("/user/profile", authenticateUser, (req, res) => {

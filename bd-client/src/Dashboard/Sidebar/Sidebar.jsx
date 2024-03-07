@@ -32,9 +32,12 @@ const Sidebar = () => {
       {/* Small Screen Navbar */}
       <div className="bg-gray-100 text-gray-800 flex justify-between md:hidden lg:overflow-hidden">
         <div>
-          <div className="block cursor-pointer p-2 font-bold border-[1px] border-slate-500">
-            <img src="../../../public/Bd It.png" alt="" />
-          </div>
+          <Link
+            to={`/`}
+            className="block cursor-pointer p-2 font-bold border-[1px] border-slate-500"
+          >
+            <img className="" src="../../../public/Bd It.png" alt="" />
+          </Link>
         </div>
 
         <button

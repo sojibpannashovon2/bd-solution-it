@@ -1,17 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
-const [user, setUser] = useState([]);
-useEffect(() => {
-  allUserDetails();
-}, []);
-
-const allUserDetails = () => {
-  axios.get(`${import.meta.env.VITE_API_URL}/register`).then((res) => {
-    setUser(res.data);
-  });
+export const fetchUserData = async () => {
+  const [axiosSecure] = useAxiosSecure();
+  try {
+    const response = await axiosSecure.get(`/register`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
 };
-
-console.log(user);
-
-export default allUserDetails;
