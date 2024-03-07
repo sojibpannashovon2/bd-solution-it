@@ -62,7 +62,7 @@ const authenticateUser = (req, res, next) => {
         } else {
           // Extract user ID from the decoded token
           req.userId = decodedToken.userId;
-          next(); // Proceed to the next middleware or route handler
+          next(); // Proceed to the next middleware or route handler fgsfdg
         }
       }
     );
