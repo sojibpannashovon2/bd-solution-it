@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleLoader } from "react-spinners";
+import { CircleLoader, ClimbingBoxLoader } from "react-spinners";
 const Loader = () => {
   return (
     <div
@@ -11,7 +11,7 @@ const Loader = () => {
       items-center 
     "
     >
-      <CircleLoader size={50} color="#5CDA0A" />
+      <ClimbingBoxLoader size={25} color="#5CDA0A" />
     </div>
   );
 };

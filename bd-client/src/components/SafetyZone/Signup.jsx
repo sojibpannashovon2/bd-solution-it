@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Signup = () => {
   const { loading } = useContext(AuthContext);
@@ -12,21 +13,21 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
-
+  const [axiosSecure] = useAxiosSecure();
   useEffect(() => {
     fetchUser();
   }, []);
 
   const fetchUser = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}/register`).then((res) => {
+    axiosSecure.get(`/register`).then((res) => {
       setUser(res.data);
     });
   };
   console.log(user);
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/register`, {
+    axiosSecure
+      .post(`/register`, {
         email,
         userName,
         password,

@@ -14,7 +14,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
   const { userData, logOut, role } = useContext(AuthContext);
-  console.log(userData);
+  // console.log(userData);
   const [isActive, setActive] = useState("false");
   // const toggleHandler = (event) => {
   //   setToggle(event.target.checked);
