@@ -18,7 +18,7 @@ const jwt = require("jsonwebtoken");
 //helps to error free between database and api creation
 const cors = require("cors");
 
-//conect to express
+//conect to express ppp
 
 const app = express();
 
