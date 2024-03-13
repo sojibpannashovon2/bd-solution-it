@@ -40,7 +40,7 @@ mongoose
     console.log(error.message);
   });
 
-//middleware
+//middleware to solve problem
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
