@@ -8,7 +8,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 //password hashing
 const bcript = require("bcrypt");
-//helps to data to json
+//helps to data to json nothing changed
 const bodyParser = require("body-parser");
 //conect to schema
 const User = require("./myModel/userSchema");
@@ -28,8 +28,8 @@ const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 mongoose
   .connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
   })
   .then(() => {
     app.listen(7001, () => {
