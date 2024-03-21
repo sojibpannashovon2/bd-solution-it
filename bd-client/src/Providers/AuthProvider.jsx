@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 // import Loader from "../components/Shared/Loader";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -11,14 +12,15 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
+
   // const axiosSecure = useAxiosSecure(navigate);
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
   );
 
   const logOut = () => {
-    setLoading(true);
+    // setLoading(true);
+
     localStorage.removeItem("token");
     setIsAuthenticated(false);
   };
@@ -90,6 +92,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   // console.log(userData);
+
   const authInfo = {
     // role,
     // setRole,

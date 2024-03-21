@@ -3,7 +3,7 @@ import Container from "./Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
-
+import { FaAngleDown } from "react-icons/fa";
 const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logOut } = useContext(AuthContext); // Use the useAuth hook
@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logOut(); // Call the logout function from AuthContext
-    navigate("/dashboard");
+    navigate("/");
   };
 
   return (
@@ -59,26 +59,71 @@ const Navbar = () => {
             >
               Home
             </Link>
+
+            <div className="group relative cursor-pointer">
+              <div className="flex items-center   bg-white px-4">
+                <div className="menu-hover my-1  block md:inline-block text-blue-900 hover:text-slate-200 px-3 border-b-2 border-blue-900 md:border-none text-xl font-semibold">
+                  About
+                </div>
+                <FaAngleDown className="text-xl ml-[-3px]" />
+              </div>
+
+              <div className="invisible absolute z-50 flex w-full flex-col bg-blue-600 py-1 px-3 text-gray-800 shadow-xl group-hover:visible">
+                <Link
+                  to={`/about`}
+                  className="my-2 text-xl  block text-center  py-1 font-semibold text-white hover:text-black md:mx-2 "
+                >
+                  Blog
+                </Link>
+              </div>
+            </div>
+            <div className="group relative cursor-pointer">
+              <div className="flex items-center   bg-white px-4">
+                <div className="menu-hover my-1  block md:inline-block text-blue-900 hover:text-slate-200 px-3 border-b-2 border-blue-900 md:border-none text-xl font-semibold">
+                  Our Services
+                </div>
+                <FaAngleDown className="text-xl ml-[-3px]" />
+              </div>
+
+              <div className="invisible absolute z-50 flex w-full flex-col bg-blue-600 py-1 px-3 text-gray-800 shadow-xl group-hover:visible">
+                <Link
+                  to={`/consult`}
+                  className="my-2 text-xl  block text-center  py-1 font-semibold text-white hover:text-black md:mx-2 "
+                >
+                  Consulting
+                </Link>
+                <Link
+                  to={`/career`}
+                  className="my-2 text-xl  block text-center  py-1 font-semibold text-white hover:text-black md:mx-2 "
+                >
+                  Careers
+                </Link>
+              </div>
+            </div>
+            <div className="group relative cursor-pointer">
+              <div className="flex items-center   bg-white px-4">
+                <div className="menu-hover my-1  block md:inline-block text-blue-900 hover:text-slate-200 px-3 border-b-2 border-blue-900 md:border-none text-xl font-semibold">
+                  Courses
+                </div>
+                <FaAngleDown className="text-xl ml-[-3px]" />
+              </div>
+
+              <div className="invisible absolute z-50 flex w-full flex-col bg-blue-600 py-1 px-3 text-gray-800 shadow-xl group-hover:visible">
+                <Link
+                  to={`/courses`}
+                  className="my-2 text-md block text-center  py-1 font-semibold text-white hover:text-black md:mx-6 "
+                >
+                  ZoomMeeting
+                </Link>
+              </div>
+            </div>
+
             <Link
-              to={`/about`}
-              href="#"
-              className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-xl font-semibold"
-            >
-              About
-            </Link>
-            <Link
-              href="#"
               to={`/contact`}
+              href="#"
               className="block md:inline-block text-blue-900 hover:text-slate-200 px-3 py-1 border-b-2 border-blue-900 md:border-none text-xl font-semibold"
             >
               Contact
-            </Link>
-            <Link
-              href="#"
-              to={`/service`}
-              className="block md:inline-block text-blue-900 px-3 py-1 border-b-2 border-blue-900 hover:text-slate-200 md:border-none text-xl font-semibold"
-            >
-              Our Services
             </Link>
           </div>
 
@@ -86,11 +131,11 @@ const Navbar = () => {
             <>
               <div className="flex justify-center items-center gap-6 mr-8">
                 <Link
-                  to={`/dashboard`}
+                  to={`/dashboard/manage_user`}
                   href="#"
                   className={`toggle ${
                     isMenuOpen ? "flex" : "hidden md:flex"
-                  } w-full md:w-auto px-4 py-1 text-right bg-blue-900 hover:bg-blue-500 text-white rounded-md`}
+                  }  w-full md:w-auto px-4 py-1 text-right bg-blue-900 hover:bg-blue-500 text-white rounded-md`}
                 >
                   Dashboard
                 </Link>

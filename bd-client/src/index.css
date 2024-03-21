@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* This is first section or home  background image */
+.banner {
+  background-image: url("./assets/Home/banner.webp");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* opacity: 0.4; */
+}
+/* This is career page  background image */
+.career {
+  background-image: url("./assets/service/careers.webp");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* opacity: 0.4; */
+}
+
+/* This is career page  background image */
+.contact {
+  background-image: url("./assets/contact/contact2.jpg");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* opacity: 0.4; */
+}
+/* This is first section or home  background image */
+.footer_top {
+  background-image: url("./assets/Home/home3.jpg");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* opacity: 0.4; */
+}
+
+@layer base {
+  @font-face {
+    font-family: "Livvic";
+
+    src: url("/font/livvic/Livvic-Regular.ttf");
+  }
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 28px;
+  /* background-color: #ffffff; */
+
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.button:hover {
+  transform: translateY(-20px); /* Move up by 10 pixels */
+}
+
+/* side card animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slideInAnimation {
+  animation: slideIn 1s ease;
+}
+
+/* genrale card animation */
+
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  transition: transform 0.5s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { useContext, useEffect, useState } from "react";
@@ -13,10 +13,13 @@ const Login = () => {
   const { loading, setLoading } = useContext(AuthContext);
   const [user, setUser] = useState([]);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.pathname || "/";
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   // console.log(email);
-  const navigate = useNavigate();
+
   useEffect(() => {
     setLoading(true);
     fetchUser();
@@ -47,7 +50,7 @@ const Login = () => {
       setPassword("");
       fetchUser();
 
-      navigate(`/`);
+      navigate(from, { replace: true });
       window.location.reload();
     } catch (error) {
       toast.error("Login Error found");

@@ -11,6 +11,10 @@ import Service from "../Pages/Service/Service";
 import Blog from "../Pages/Blog/Blog";
 import DashboardLayout from "../Layout/DashboardLayout";
 import ManageUser from "../Dashboard/components/ManageUser";
+import Consulting from "../Pages/Service/Consulting";
+import Careers from "../Pages/Service/Careers";
+import PrivateRoutes from "./PrivateRoutes";
+import UsersTable from "../Pages/Courses/UsersTable";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +46,18 @@ const router = createBrowserRouter([
         element: <Service />,
       },
       {
+        path: "/consult",
+        element: <Consulting />,
+      },
+      {
+        path: "/career",
+        element: <Careers />,
+      },
+      {
+        path: "/courses",
+        element: <UsersTable />,
+      },
+      {
         path: "/blog",
         element: <Blog />,
       },
@@ -49,7 +65,11 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoutes>
+        <DashboardLayout />
+      </PrivateRoutes>
+    ),
     children: [
       {
         path: "/dashboard/blog",

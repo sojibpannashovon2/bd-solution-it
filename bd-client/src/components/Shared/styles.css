@@ -1,0 +1,25 @@
+/* Basic styles for navbar and button */
+.navbar {
+  background-color: #333;
+  /* padding: 10px; */
+  display: flex;
+  justify-content: center;
+}
+.navbar a {
+  /* color: white; */
+  text-decoration: none;
+  position: relative;
+}
+.navbar button {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show button on hover */
+.navbar a:hover button {
+  opacity: 1;
+}

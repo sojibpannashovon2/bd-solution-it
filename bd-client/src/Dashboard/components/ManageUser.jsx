@@ -29,7 +29,7 @@ const ManageUser = () => {
     fetchUserData();
   }, []);
 
-  //   console.log(userData);
+  console.log(userData);
 
   const {
     isPending,

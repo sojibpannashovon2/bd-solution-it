@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImSpinner4 } from "react-icons/im";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -9,11 +9,13 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 const Signup = () => {
   const { loading } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [axiosSecure] = useAxiosSecure();
+  const from = location?.state?.pathname || "/";
   useEffect(() => {
     fetchUser();
   }, []);
@@ -38,7 +40,7 @@ const Signup = () => {
         setUserName();
         setPassword();
         fetchUser();
-        navigate(`/login`);
+        navigate(from, { replace: true });
       });
   };
 
