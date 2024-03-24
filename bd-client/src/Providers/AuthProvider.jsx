@@ -1,107 +1,126 @@
 import { createContext, useEffect, useState } from "react";
-import React from "react";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+
 import axios from "axios";
-import toast from "react-hot-toast";
-// import Loader from "../components/Shared/Loader";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import app from "../../firebase/firebase.config";
 
 export const AuthContext = createContext(null);
 
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  // const axiosSecure = useAxiosSecure(navigate);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token")
-  );
+  const [loading, setLoading] = useState(true);
+  // console.log(user);
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  const signIn = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const signInWithGoogle = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
+  const resetPassword = (email) => {
+    setLoading(true);
+    return sendPasswordResetEmail(auth, email);
+  };
 
   const logOut = () => {
-    // setLoading(true);
-
+    setLoading(true);
     localStorage.removeItem("token");
-    setIsAuthenticated(false);
+    return signOut(auth);
   };
 
-  //tanstack useeProfile component
-
-  // const { data: users = [] } = useQuery({
-  //   queryKey: [],
-  //   enabled: true,
-  //   queryFn: async () => {
-  //     const res = await axios.get(
-  //       `${import.meta.env.VITE_API_URL}/user/profile`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     console.log(res.data);
-  //     return res.data;
-  //   },
-  // });
-
-  // if (isPending) return <Loader />;
-
-  // if (error) return "An error has occurred: " + error.message;
-  // console.log(data);
-  // UserProfile Component
-  const [userData, setUserData] = useState(null);
-
-  const getUserData = async (token) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setLoading(true);
-      return response.data.user;
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      toast.error("Error fetching user data:", error);
-      return null;
-    }
+  const updateUserProfile = (name, photo) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    });
   };
 
-  const fetchDataWithToken = async (token, setData) => {
-    const userData = await getUserData(token);
-    setData(userData);
-    setLoading(false);
-  };
-
-  const fetchUserData = async (setData) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetchDataWithToken(token, setData);
-    } else {
-      // Handle unauthorized access
-      console.error("Unauthorized access: No token found");
-      toast.error("Unauthorized access: No token found");
-    }
-  };
   useEffect(() => {
-    fetchUserData(setUserData);
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser && currentUser?.email) {
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/jwt`, {
+            email: currentUser?.email,
+          })
+          .then((data) => {
+            // console.log(data.data.token);
+            localStorage.setItem("token", data.data.token);
+            setLoading(false);
+          });
+      } else {
+        localStorage.removeItem("token");
+        setLoading(false);
+      }
+      // console.log("current user", currentUser);
+    });
+    return () => {
+      return unsubscribe();
+    };
   }, []);
 
-  // console.log(userData);
+  //Get user specific role
+
+  const getRole = async (email) => {
+    const jwtToken = localStorage.getItem("token");
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/users/admin/${email}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
+    );
+    const user = await response.json();
+    return user;
+  };
+  const [identity, setIdentity] = useState("");
+  useEffect(() => {
+    if (user) {
+      getRole(user.email).then((data) => {
+        // console.log(data);
+        setIdentity(data.role);
+      });
+    }
+  }, [user]);
+
+  console.log(identity);
 
   const authInfo = {
-    // role,
-    // setRole,
     setLoading,
-    isAuthenticated,
+    createUser,
+    signIn,
+    signInWithGoogle,
+    resetPassword,
     logOut,
+    updateUserProfile,
     user,
     loading,
-    userData,
+    identity,
+    setIdentity,
   };
 
   return (

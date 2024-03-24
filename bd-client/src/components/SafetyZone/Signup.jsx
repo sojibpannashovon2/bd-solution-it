@@ -1,47 +1,85 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImSpinner4 } from "react-icons/im";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useContext, useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { useContext } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { AuthContext } from "../../Providers/AuthProvider";
+
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Signup = () => {
-  const { loading } = useContext(AuthContext);
+  const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState([]);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userName, setUserName] = useState("");
-  const [axiosSecure] = useAxiosSecure();
   const from = location?.state?.pathname || "/";
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  const {
+    setLoading,
+    createUser,
+    signInWithGoogle,
+    updateUserProfile,
+    loading,
+    user,
+  } = useContext(AuthContext);
 
-  const fetchUser = () => {
-    axiosSecure.get(`/register`).then((res) => {
-      setUser(res.data);
-    });
-  };
-  console.log(user);
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    axiosSecure
-      .post(`/register`, {
-        email,
-        userName,
-        password,
-      })
-      .then(() => {
-        toast.success("Registration successfull");
-        setEmail();
-        setUserName();
-        setPassword();
-        fetchUser();
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    const name = event.target.name.value;
+    const photo = event.target.photo.value;
+
+    try {
+      setLoading(true);
+      // Create user with email and password
+      const loggedUserCredential = await createUser(email, password);
+
+      // Use loggedUserCredential to get user
+      const loggedUser = loggedUserCredential.user;
+      // console.log(loggedUser);
+      // Update user profile with name and photo
+      await updateUserProfile(name, photo); // Await updateUserProfile
+
+      // Save the user to the database or perform any other actions here
+      toast.success(`Sign up successful`);
+
+      const currentUser = {
+        email: loggedUser?.email,
+        // Add other properties of user if needed
+      };
+
+      await axiosSecure
+        .put(`/users/${loggedUser?.email}`, currentUser)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error updating user:", error);
+          toast.error("Error Found");
+        });
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      setLoading(false);
+      console.error(err.message);
+      toast.error(err.message);
+    }
+  };
+
+  const handleGoogleSign = async () => {
+    try {
+      setLoading(true);
+      // Sign in with Google
+      await signInWithGoogle().then((result) => {
+        const user = result?.user;
+        //save the user to dataBase
+
         navigate(from, { replace: true });
       });
+    } catch (err) {
+      setLoading(false);
+      console.error(err.message);
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -49,7 +87,7 @@ const Signup = () => {
       <div className="flex flex-col max-w-md px-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
         <div className="mb-4 text-center">
           <h1 className="my-2 text-4xl font-bold">Sign Up</h1>
-          <p className="text-sm text-gray-400">Welcome to Solution BD IT</p>
+          <p className="text-sm text-gray-400">Welcome to BD SOLUTION IT</p>
         </div>
         <form
           onSubmit={handleSubmit}
@@ -57,23 +95,37 @@ const Signup = () => {
           action=""
           className="space-y-6 ng-untouched ng-pristine ng-valid"
         >
+          {/* Form inputs */}
           <div className="space-y-4">
+            {/* Name input */}
             <div>
-              <label htmlFor="email" className="block mb-2 text-sm">
+              <label htmlFor="name" className="block mb-2 text-sm">
                 Name
               </label>
               <input
                 type="text"
                 name="name"
                 id="name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
                 placeholder="Enter Your Name Here"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
                 data-temp-mail-org="0"
               />
             </div>
-
+            {/* Photo input */}
+            <div>
+              <label htmlFor="photo" className="block mb-2 text-sm">
+                Photo URL
+              </label>
+              <input
+                type="text"
+                name="photo"
+                id="photo"
+                placeholder="Enter Your photo Here"
+                className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
+                data-temp-mail-org="0"
+              />
+            </div>
+            {/* Email input */}
             <div>
               <label htmlFor="email" className="block mb-2 text-sm">
                 Email address
@@ -81,15 +133,14 @@ const Signup = () => {
               <input
                 type="email"
                 name="email"
-                id="email"
+                id="email-input"
                 required
                 placeholder="Enter Your Email Here"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
-                data-temp-mail-org="0"
               />
             </div>
+            {/* Password input */}
             <div>
               <div className="flex justify-between">
                 <label htmlFor="password" className="text-sm mb-2">
@@ -102,13 +153,12 @@ const Signup = () => {
                 id="password"
                 required
                 placeholder="*******"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
               />
             </div>
           </div>
-
+          {/* Submit button */}
           <div>
             <button
               type="submit"
@@ -122,7 +172,22 @@ const Signup = () => {
             </button>
           </div>
         </form>
-
+        {/* Google sign-in button */}
+        <div className="flex items-center pt-4 space-x-1">
+          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
+          <p className="px-3 text-sm dark:text-gray-400">
+            Signup with social accounts
+          </p>
+          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
+        </div>
+        <div
+          onClick={handleGoogleSign}
+          className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
+        >
+          <FcGoogle size={32} />
+          <p>Continue with Google</p>
+        </div>
+        {/* Link to login page */}
         <p className="px-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
           <Link

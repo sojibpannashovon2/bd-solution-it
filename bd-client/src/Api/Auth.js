@@ -1,26 +1,27 @@
-import axios from "axios";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
+//Get user specific role
 
-export const fetchUserData = async () => {
-  const [axiosSecure] = useAxiosSecure();
-  try {
-    const response = await axiosSecure.get(`/register`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    throw error;
+export const getRole = async (email) => {
+  const jwtToken = localStorage.getItem("token");
+
+  if (!jwtToken) {
+    throw new Error("JWT token not found in localStorage");
   }
-};
 
-export const becomeHost = async (email) => {
-  const currentUser = {
-    role: `host`,
-  };
-  return fetch(`${import.meta.env.VITE_API_URL}/users/${email}`, {
-    method: "PUT",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(currentUser),
-  }).then((res) => res.json());
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/${email}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(`Failed to fetch user role: ${errorMessage}`);
+  }
+
+  const user = await response.json();
+  return user?.role;
 };

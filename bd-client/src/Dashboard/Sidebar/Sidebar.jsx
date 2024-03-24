@@ -7,15 +7,15 @@ import { FcSettings } from "react-icons/fc";
 import { AiOutlineBars } from "react-icons/ai";
 // import { BsBookFill, BsFillHouseAddFill } from 'react-icons/bs'
 
-import { AuthContext } from "../../Providers/AuthProvider";
 import HostMenu from "./HostMenu";
 import GuestMenu from "./GuestMenu";
 import { FaHome } from "react-icons/fa";
+import { AuthContext } from "../../Providers/AuthProvider";
 const Sidebar = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
-  const { userData, logOut, role } = useContext(AuthContext);
-  // console.log(userData);
+  const { user, logOut, role } = useContext(AuthContext);
+  // console.log(user);
   const [isActive, setActive] = useState("false");
   // const toggleHandler = (event) => {
   //   setToggle(event.target.checked);
@@ -52,7 +52,7 @@ const Sidebar = () => {
       <div
         // z-10
         // md:fixed
-        className={` flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+        className={` flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-2 px-2 py-4 absolute inset-y-0 left-0 transform ${
           isActive && "-translate-x-full"
         }  md:translate-x-0  transition duration-200 ease-in-out`}
       >
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 referrerPolicy="no-referrer"
               />
             </Link>
-            <div className="flex flex-col items-center mt-4 -mx-2">
+            <div className="flex flex-col items-center mt-4  border border-blue-400 mx-2 rounded-lg shadow-xl">
               {/* <Link to="/dashboard">
                 <img
                   className="object-cover w-16 h-16 mx-2 rounded-full"
@@ -80,16 +80,20 @@ const Sidebar = () => {
                 />
               </Link> */}
               <Link to="/dashboard">
-                <h4 className="mx-2 mt-2 font-medium text-gray-800  hover:underline">
-                  {userData?.userName}
+                <h4 className="mx-2 mt-2 text-3xl font-bold text-gray-800  hover:underline">
+                  {user?.displayName}
                 </h4>
               </Link>
               <Link to="/dashboard">
-                <p className="mx-2 mt-1 text-sm font-medium text-gray-600  hover:underline">
-                  {userData?.email}
+                <p className="mx-2 mt-1 text-lg font-medium text-gray-600  hover:underline">
+                  {user?.email}
                 </p>
               </Link>
             </div>
+
+            <h1 className="text-2xl my-8 xl:lg:md:ml-10 font-bold">
+              Admin Panel
+            </h1>
           </div>
 
           {/* Nav Items */}

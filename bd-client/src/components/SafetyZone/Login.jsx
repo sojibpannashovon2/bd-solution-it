@@ -1,62 +1,66 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
-import { useContext, useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { useContext, useRef } from "react";
 
 import { TbFidgetSpinner } from "react-icons/tb";
+
 import { AuthContext } from "../../Providers/AuthProvider";
-import axios from "axios";
-
-// import { saveUser } from "../../Api/auth";
-
 const Login = () => {
-  const { loading, setLoading } = useContext(AuthContext);
-  const [user, setUser] = useState([]);
-
+  const { loading, setLoading, signIn, signInWithGoogle, resetPassword } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const emailRef = useRef();
+
   const from = location?.state?.pathname || "/";
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  // console.log(email);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchUser();
-  }, []);
-
-  const fetchUser = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}/register`).then((res) => {
-      // console.log(res.data);
-      setLoading(false);
-    });
-  };
-
-  const handleSubmit = async (event) => {
+  //handle emailPasswordLogin
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/login`,
-        {
-          email,
-          password,
-        }
-      );
-      const token = response.data.token;
-      localStorage.setItem("token", token); // Store the token in local storage
-      toast.success("Login successful");
+    const email = event.target.email.value;
+    const password = event.target.password.value;
 
-      setEmail("");
-      setPassword("");
-      fetchUser();
+    signIn(email, password)
+      .then((result) => {
+        // console.log(result.user);
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err.message);
+        toast.error(err.message);
+      });
+  };
+  //handle google signin
+  const handleGoogleSign = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result?.user);
+        //save the user to dataBase
 
-      navigate(from, { replace: true });
-      window.location.reload();
-    } catch (error) {
-      toast.error("Login Error found");
-    }
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err.message);
+        toast.error(err.message);
+      });
   };
 
+  //Handle Resset Password
+  const handleReset = () => {
+    const email = emailRef.current.value;
+    resetPassword(email)
+      .then(() => {
+        setLoading(false);
+        toast.success(`Please check email that you have find the reset link`);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err.message);
+        toast.error(err.message);
+      });
+  };
   return (
     <div className="flex justify-center items-center min-h-screen pt-2 shadow-lg">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
@@ -80,13 +84,11 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                id="email"
+                id="email-input"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter Your Email Here"
+                autoComplete="email"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
-                data-temp-mail-org="0"
               />
             </div>
             <div>
@@ -101,8 +103,7 @@ const Login = () => {
                 id="password"
                 required
                 placeholder="*******"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
               />
             </div>
@@ -121,15 +122,29 @@ const Login = () => {
             </button>
           </div>
         </form>
-        {/* <div className="space-y-1">
+        <div className="space-y-1">
           <button
             onClick={handleReset}
             className="text-xs hover:underline hover:text-rose-500 text-gray-400"
           >
             Forgot password?
           </button>
-        </div> */}
+        </div>
+        <div className="flex items-center pt-4 space-x-1">
+          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
+          <p className="px-3 text-sm dark:text-gray-400">
+            Login with social accounts
+          </p>
+          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
+        </div>
+        <div
+          onClick={handleGoogleSign}
+          className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
+        >
+          <FcGoogle size={32} />
 
+          <p>Continue with Google</p>
+        </div>
         <p className="px-6 text-sm text-center text-gray-400">
           Don't have an account yet?{" "}
           <Link

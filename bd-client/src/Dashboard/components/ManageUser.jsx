@@ -2,69 +2,33 @@ import React, { useContext, useEffect, useState } from "react";
 
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
-import { AuthContext } from "../../Providers/AuthProvider";
+
 import TableMangeUser from "./Tables/TableMangeUser";
 import Loader from "../../components/Shared/Loader";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const ManageUser = () => {
   const [axiosSecure] = useAxiosSecure();
-  const [userData, setUserData] = useState([]);
 
-  const { loading } = useContext(AuthContext);
-
-  const fetchUserData = () => {
-    // getHostsRooms(user?.email)
-    axiosSecure
-      .get(`/register`)
-      .then((data) => {
-        // console.log(data);
-        setUserData(data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  console.log(userData);
+  const { loading, user } = useContext(AuthContext);
 
   const {
     isPending,
     error,
-    data: register = [],
+    data: users = [],
     refetch,
   } = useQuery({
-    queryKey: ["register"],
+    queryKey: ["users"],
     enabled: !loading,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/register`);
+      const res = await axiosSecure.get(`/users/${user?.email}`);
       //   console.log(res.data);
       return res.data;
     },
   });
-  console.log(register);
+  // console.log(users);
   if (isPending) return <Loader />;
 
-  //   the website you're requesting hasn't been updated since the last time you accessed it.
-
-  //   if (error) return "An error has occurred: " + error.message;
-  //   console.log(users);
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const data = await fetchUserData();
-  //         setUserData(data);
-  //       } catch (error) {
-
-  //         console.error("Error fetching user data in UserDataComponent:", error);
-  //       }
-  //     };
-  //     fetchData();
-  //   }, []);
-  //   console.log(userData);
   return (
     <>
       <div className="flex flex-col">
@@ -92,8 +56,13 @@ const ManageUser = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {register?.map((user, index) => (
-                    <TableMangeUser key={user._id} user={user} index={index} />
+                  {users?.map((user, index) => (
+                    <TableMangeUser
+                      key={user._id}
+                      user={user}
+                      index={index}
+                      refetch={refetch}
+                    />
                   ))}
                 </tbody>
               </table>
