@@ -54,6 +54,7 @@ const verifyJWT = (req, res, next) => {
 async function run() {
   try {
     const usersCollection = client.db("bdSolution").collection("users");
+    const contactHistory = client.db("bdSolution").collection("contacts");
 
     //Genarate Jwt token
     app.post("/jwt", async (req, res) => {
@@ -114,13 +115,31 @@ async function run() {
       res.send(remove);
     });
 
-    //contact post
+    //contact add to database
 
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-    // console.log(
-    //   "Pinged your deployment. You successfully connected to MongoDB!"
-    // );
+    app.post("/contacts", verifyJWT, async (req, res) => {
+      const body = req.body;
+      const result = await contactHistory.insertOne(body);
+      res.send(result);
+    });
+
+    //get contact data
+
+    app.get("/contacts", verifyJWT, async (req, res) => {
+      const query = req.params.email;
+      const contact = contactHistory.find(query);
+      const history = await contact.toArray();
+      res.send(history);
+    });
+
+    /// delete conatact
+
+    app.delete("/contact/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const remove = await contactHistory.deleteOne(query);
+      res.send(remove);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

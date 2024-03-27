@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import React, { useContext } from "react";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { AuthContext } from "../../../Providers/AuthProvider";
+import TableMangeConatacts from "../Tables/TableMangeConatacts";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "../../../components/Shared/Loader";
 
-import TableMangeUser from "./Tables/TableMangeUser";
-import Loader from "../../components/Shared/Loader";
-import { AuthContext } from "../../Providers/AuthProvider";
-
-const ManageUser = () => {
+const ContactHistory = () => {
   const [axiosSecure] = useAxiosSecure();
 
   const { loading, user } = useContext(AuthContext);
@@ -15,18 +13,18 @@ const ManageUser = () => {
   const {
     isPending,
     error,
-    data: users = [],
+    data: contacts = [],
     refetch,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["contacts"],
     enabled: !loading,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user?.email}`);
+      const res = await axiosSecure.get(`/contacts`);
       //   console.log(res.data);
       return res.data;
     },
   });
-  // console.log(users);
+  console.log(contacts);
   if (isPending) return <Loader />;
 
   return (
@@ -46,18 +44,18 @@ const ManageUser = () => {
                       Email
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Make Admin
+                      Message
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    {/* <th scope="col" className="px-6 py-4">
                       Delete
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.map((user, index) => (
-                    <TableMangeUser
-                      key={user._id}
-                      user={user}
+                  {contacts?.map((contact, index) => (
+                    <TableMangeConatacts
+                      key={contact._id}
+                      contact={contact}
                       index={index}
                       refetch={refetch}
                     />
@@ -72,4 +70,4 @@ const ManageUser = () => {
   );
 };
 
-export default ManageUser;
+export default ContactHistory;

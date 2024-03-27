@@ -14,11 +14,14 @@ import Consulting from "../Pages/Service/Consulting";
 import Careers from "../Pages/Service/Careers";
 
 import UsersTable from "../Pages/Courses/UsersTable";
+import ContactHistory from "../Dashboard/components/contact/ContactHistory";
+import ErrorPage from "../components/Shared/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -60,11 +63,16 @@ const router = createBrowserRouter([
         path: "/blog",
         element: <Blog />,
       },
+      // {
+      //   path: "/contact-form",
+      //   element: <ContactForm />,
+      // },
     ],
   },
   {
     path: "dashboard",
     element: <DashboardLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/dashboard/blog",
@@ -85,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/manage_user",
         element: <ManageUser />,
+      },
+      {
+        path: "/dashboard/contact-history",
+        element: <ContactHistory />,
       },
     ],
   },

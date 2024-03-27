@@ -45,9 +45,9 @@ const TableMangeUser = ({ user, index, refetch }) => {
         <td className="whitespace-nowrap px-6 py-4  font-semibold text-xl">
           {index + 1}
         </td>
-        <td className="whitespace-nowrap px-6 py-4 font-semibold text-xl">
+        {/* <td className="whitespace-nowrap px-6 py-4 font-semibold text-xl">
           {user?.userName}
-        </td>
+        </td> */}
         <td className="whitespace-nowrap px-6 py-4 font-semibold text-xl">
           {user?.email}
         </td>

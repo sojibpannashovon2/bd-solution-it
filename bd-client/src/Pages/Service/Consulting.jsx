@@ -63,7 +63,7 @@ const Consulting = () => {
               --------- JOB OPPORTUNITIES -----------
             </h2>
             <h2 className="font-bold text-[#282828]  text-[30px] xl:lg:md:text-[40px] font-Livvic">
-              Careers At Atang IT Solutions
+              Careers At Paradigm IT Solutions
             </h2>
           </div>
           <div className="grid grid-cols-1 xl:lg:md:grid-cols-2 gap-8 my-[40px]">

@@ -7,7 +7,7 @@ import { TbFidgetSpinner } from "react-icons/tb";
 
 import { AuthContext } from "../../Providers/AuthProvider";
 const Login = () => {
-  const { loading, setLoading, signIn, signInWithGoogle, resetPassword } =
+  const { loading, setLoading, signIn, resetPassword } =
     useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,21 +23,6 @@ const Login = () => {
     signIn(email, password)
       .then((result) => {
         // console.log(result.user);
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err.message);
-        toast.error(err.message);
-      });
-  };
-  //handle google signin
-  const handleGoogleSign = () => {
-    signInWithGoogle()
-      .then((result) => {
-        console.log(result?.user);
-        //save the user to dataBase
-
         navigate(from, { replace: true });
       })
       .catch((err) => {
@@ -82,6 +67,7 @@ const Login = () => {
                 Email address
               </label>
               <input
+                ref={emailRef}
                 type="email"
                 name="email"
                 id="email-input"
@@ -130,21 +116,7 @@ const Login = () => {
             Forgot password?
           </button>
         </div>
-        <div className="flex items-center pt-4 space-x-1">
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-          <p className="px-3 text-sm dark:text-gray-400">
-            Login with social accounts
-          </p>
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-        </div>
-        <div
-          onClick={handleGoogleSign}
-          className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
-        >
-          <FcGoogle size={32} />
 
-          <p>Continue with Google</p>
-        </div>
         <p className="px-6 text-sm text-center text-gray-400">
           Don't have an account yet?{" "}
           <Link

@@ -56,7 +56,7 @@ const Footer = () => {
                     About
                   </Link>
                   <Link
-                    to={`/blog`}
+                    to={`/about`}
                     className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500"
                   >
                     Blog
@@ -82,7 +82,10 @@ const Footer = () => {
                   <Link className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">
                     All Courses
                   </Link>
-                  <Link className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">
+                  <Link
+                    to={`/career`}
+                    className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500"
+                  >
                     Careers
                   </Link>
                   <Link className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">

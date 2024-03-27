@@ -3,13 +3,11 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // import Logo from "../Shared/Navbar/Logo";
 import { GrLogout } from "react-icons/gr";
-import { FcSettings } from "react-icons/fc";
+import { FcContacts, FcSettings } from "react-icons/fc";
 import { AiOutlineBars } from "react-icons/ai";
 // import { BsBookFill, BsFillHouseAddFill } from 'react-icons/bs'
 
-import HostMenu from "./HostMenu";
-import GuestMenu from "./GuestMenu";
-import { FaHome } from "react-icons/fa";
+import { FaEnvelope, FaHome } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthProvider";
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -70,22 +68,14 @@ const Sidebar = () => {
                 referrerPolicy="no-referrer"
               />
             </Link>
-            <div className="flex flex-col items-center mt-4  border border-blue-400 mx-2 rounded-lg shadow-xl">
-              {/* <Link to="/dashboard">
-                <img
-                  className="object-cover w-16 h-16 mx-2 rounded-full"
-                  src="../../public/Bd It.png"
-                  alt="avatar"
-                  referrerPolicy="no-referrer"
-                />
-              </Link> */}
+            <div className="flex flex-col items-center mt-4  border border-blue-400  rounded-lg shadow-xl px-4 ">
               <Link to="/dashboard">
-                <h4 className="mx-2 mt-2 text-3xl font-bold text-gray-800  hover:underline">
+                <h4 className="mx-2 mt-2 text-2xl font-bold text-gray-800  hover:underline">
                   {user?.displayName}
                 </h4>
               </Link>
               <Link to="/dashboard">
-                <p className="mx-2 mt-1 text-lg font-medium text-gray-600  hover:underline">
+                <p className=" mx-2 mt-1 text-lg font-medium text-gray-600  hover:underline">
                   {user?.email}
                 </p>
               </Link>
@@ -95,39 +85,6 @@ const Sidebar = () => {
               Admin Panel
             </h1>
           </div>
-
-          {/* Nav Items */}
-          {/* <div className="flex flex-col justify-between flex-1 mt-6">
-            <nav>
-              {role && role === "host" ? (
-                <>
-                  <label
-                    htmlFor="Toggle3"
-                    className="flex-col w-full  rounded-md cursor-pointer text-gray-800
-                                                     justify-center  mt-6"
-                  >
-                    <input
-                      onChange={toggleHandler}
-                      id="Toggle3"
-                      type="checkbox"
-                      className="hidden peer"
-                    />
-
-                    <span className="px-4 ml-12 py-1 rounded-l-md bg-sky-400 peer-checked:bg-gray-300">
-                      Guest
-                    </span>
-                    <span className="px-4 py-1 rounded-r-md bg-gray-300 peer-checked:bg-sky-400">
-                      Host
-                    </span>
-
-                    {toggle ? <HostMenu /> : <GuestMenu />}
-                  </label>{" "}
-                </>
-              ) : (
-                <GuestMenu />
-              )}
-            </nav>
-          </div> */}
         </div>
 
         <div>
@@ -155,6 +112,18 @@ const Sidebar = () => {
             <FcSettings className="w-5 h-5" />
 
             <span className="mx-4 font-medium">Manage Users</span>
+          </NavLink>
+          <NavLink
+            to="/dashboard/contact-history"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 mt-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
+                isActive ? "bg-gray-300  text-gray-700" : "text-gray-600"
+              }`
+            }
+          >
+            <FcContacts className="w-5 h-5" />
+
+            <span className="mx-4 font-medium">Contact History</span>
           </NavLink>
 
           <button
