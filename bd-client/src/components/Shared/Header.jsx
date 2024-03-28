@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <>
       <Container>
-        <div className="bg-[#1e40af] xl:lg:md:flex justify-between px-[80px] py-[10px] mb-40px xl:lg:md:mb-[20px]">
+        <div className="bg-[#1e40af] xl:lg:md:flex justify-between px-[80px] py-[10px] ">
           <div className="flex justify-between xl:lg:md:items-center gap-6">
             <div className="flex justify-center xl:lg:md:items-center gap-2 font-semibold text-white">
               <FaHeadset />

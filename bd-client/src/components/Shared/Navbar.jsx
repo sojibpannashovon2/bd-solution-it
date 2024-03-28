@@ -1,30 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
 
 import { FaAngleDown } from "react-icons/fa";
-import { AuthContext } from "../../Providers/AuthProvider";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+
 const Navbar = () => {
-  const navigate = useNavigate();
-  const { user, logOut, loading, identity } = useContext(AuthContext); // Use the useAuth hook
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogout = () => {
-    logOut(); // Call the logout function from AuthContext
-    navigate("/");
-  };
-
   return (
     <>
       <Container>
-        <nav className="flex flex-wrap items-center justify-between ">
+        <nav className="flex flex-wrap items-center justify-around ">
           <img
             src="/public/bd it.png"
             className="h-16 w-32"
@@ -129,43 +119,6 @@ const Navbar = () => {
               Contact
             </Link>
           </div>
-
-          {user ? (
-            <>
-              <div className="flex justify-center items-center gap-6 mr-8">
-                {identity == "admin" && (
-                  <Link
-                    to={`/dashboard/manage_user`}
-                    href="#"
-                    className={`toggle ${
-                      isMenuOpen ? "flex" : "hidden md:flex"
-                    }  w-full md:w-auto px-4 py-1 text-right bg-blue-900 hover:bg-blue-500 text-white rounded-md`}
-                  >
-                    Dashboard
-                  </Link>
-                )}
-
-                <button
-                  onClick={handleLogout}
-                  className="border border-slate-700 px-4 py-1 font-semibold rounded-md bg-red-400 hover:bg-red-600"
-                >
-                  Logout
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <Link
-                to={`/login`}
-                href="#"
-                className={`toggle ${
-                  isMenuOpen ? "flex" : "hidden md:flex"
-                } w-full md:w-auto px-4 py-1 text-right bg-green-900 hover:bg-green-500 text-white rounded-md`}
-              >
-                Login Now
-              </Link>
-            </>
-          )}
         </nav>
       </Container>
     </>

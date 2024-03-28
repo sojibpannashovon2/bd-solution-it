@@ -3,14 +3,13 @@ import Sidebar from "../Dashboard/Sidebar/Sidebar";
 import Header from "../components/Shared/Header";
 import Navbar from "../components/Shared/Navbar";
 import Container from "../components/Shared/Container";
+import DashboardNav from "../Dashboard/components/DashboardNav";
 
 const DashboardLayout = () => {
   return (
     <>
-      <Header />
-      {/* <Navbar /> */}
-
       <Container>
+        <DashboardNav />
         <div className="relative min-h-screen md:flex">
           <Sidebar />
           <div className="flex-1  md:ml-64">

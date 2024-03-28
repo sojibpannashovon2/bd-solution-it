@@ -16,6 +16,9 @@ import Careers from "../Pages/Service/Careers";
 import UsersTable from "../Pages/Courses/UsersTable";
 import ContactHistory from "../Dashboard/components/contact/ContactHistory";
 import ErrorPage from "../components/Shared/ErrorPage";
+import Navbar from "../components/Shared/Navbar";
+import AdminLayout from "../Layout/AdminLayout";
+import AddBlogs from "../Dashboard/AddBlogs/AddBlogs";
 
 const router = createBrowserRouter([
   {
@@ -27,14 +30,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/signup",
-        element: <Signup />,
-      },
+
       {
         path: "/about",
         element: <About />,
@@ -69,14 +65,31 @@ const router = createBrowserRouter([
       // },
     ],
   },
+
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+
+  {
+    path: "admin",
+    element: <AdminLayout></AdminLayout>,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/admin/login",
+        element: <Login />,
+      },
+    ],
+  },
   {
     path: "dashboard",
     element: <DashboardLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/dashboard/blog",
-        element: <Blog />,
+        path: "/dashboard/add-blog",
+        element: <AddBlogs />,
       },
       {
         path: "/dashboard/about",

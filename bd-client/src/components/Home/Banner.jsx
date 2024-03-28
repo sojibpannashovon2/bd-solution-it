@@ -3,7 +3,7 @@ import React from "react";
 const Banner = () => {
   return (
     <>
-      <div className="banner bg-opacity-30 h-full xl:lg:md:h-[423px]   mt-[20px]">
+      <div className="banner bg-opacity-30 h-full xl:lg:md:h-[423px]   mt-[2px]">
         <div className="bg-blue-600 bg-opacity-40 text-white h-full">
           <div className="xl:lg:md:w-[60%]  xl:lg:md:ml-[40px]">
             <h1 className="Sans-serif font-normal text-[22px] xl:lg:md:text-[30px] font-Livvic">
