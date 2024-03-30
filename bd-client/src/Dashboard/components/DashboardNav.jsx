@@ -13,7 +13,7 @@ const DashboardNav = () => {
 
   return (
     <>
-      <nav className="flex flex-wrap items-center justify-around  bg-slate-500  ">
+      <nav className="flex flex-wrap items-center justify-around  bg-blue-700  ">
         {/* <img
           src="/public/bd it.png"
           className="h-16 w-32"

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import { AuthContext } from "../../../Providers/AuthProvider";
-import TableMangeConatacts from "../Tables/TableMangeConatacts";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { AuthContext } from "../../Providers/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../../../components/Shared/Loader";
+import Loader from "../../components/Shared/Loader";
+import TableBlogMange from "../components/Tables/TableBlogMange";
 
-const ContactHistory = () => {
+const Displayblog = () => {
   const [axiosSecure] = useAxiosSecure();
 
   const { loading, user } = useContext(AuthContext);
@@ -13,18 +13,18 @@ const ContactHistory = () => {
   const {
     isPending,
     error,
-    data: contacts = [],
+    data: blogs = [],
     refetch,
   } = useQuery({
-    queryKey: ["contacts"],
+    queryKey: ["blogs"],
     enabled: !loading,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/contacts`);
+      const res = await axiosSecure.get(`/blogs`);
       //   console.log(res.data);
       return res.data;
     },
   });
-  // console.log(contacts);
+  // console.log(blogs);
   if (isPending) return <Loader />;
 
   return (
@@ -41,21 +41,28 @@ const ContactHistory = () => {
                     </th>
 
                     <th scope="col" className="px-6 py-4">
-                      Email
+                      Image
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Message
+                      Author Name
                     </th>
-                    {/* <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-6 py-4">
+                      Description
+                    </th>
+
+                    <th scope="col" className="px-6 py-4">
+                      Update
+                    </th>
+                    <th scope="col" className="px-6 py-4">
                       Delete
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {contacts?.map((contact, index) => (
-                    <TableMangeConatacts
-                      key={contact._id}
-                      contact={contact}
+                  {blogs?.map((blog, index) => (
+                    <TableBlogMange
+                      key={blog._id}
+                      blog={blog}
                       index={index}
                       refetch={refetch}
                     />
@@ -69,5 +76,4 @@ const ContactHistory = () => {
     </>
   );
 };
-
-export default ContactHistory;
+export default Displayblog;

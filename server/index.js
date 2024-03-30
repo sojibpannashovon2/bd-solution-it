@@ -55,6 +55,7 @@ async function run() {
   try {
     const usersCollection = client.db("bdSolution").collection("users");
     const contactHistory = client.db("bdSolution").collection("contacts");
+    const blogCollection = client.db("bdSolution").collection("blogs");
 
     //Genarate Jwt token
     app.post("/jwt", async (req, res) => {
@@ -132,12 +133,35 @@ async function run() {
       res.send(history);
     });
 
+    //blogs add to database
+
+    app.post("/blogs", verifyJWT, async (req, res) => {
+      const body = req.body;
+      const result = await blogCollection.insertOne(body);
+      res.send(result);
+    });
+    //blogs get from database
+
+    app.get("/blogs", verifyJWT, async (req, res) => {
+      const body = req.body;
+      const result = await blogCollection.find().toArray();
+      res.send(result);
+    });
+
     /// delete conatact
 
     app.delete("/contact/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const remove = await contactHistory.deleteOne(query);
+      res.send(remove);
+    });
+    /// delete blog
+
+    app.delete("/blog/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const remove = await blogCollection.deleteOne(query);
       res.send(remove);
     });
   } finally {

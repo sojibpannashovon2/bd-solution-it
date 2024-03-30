@@ -19,6 +19,7 @@ import ErrorPage from "../components/Shared/ErrorPage";
 import Navbar from "../components/Shared/Navbar";
 import AdminLayout from "../Layout/AdminLayout";
 import AddBlogs from "../Dashboard/AddBlogs/AddBlogs";
+import Displayblog from "../Dashboard/DisplayBlog/Displayblog";
 
 const router = createBrowserRouter([
   {
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/contact-history",
         element: <ContactHistory />,
+      },
+      {
+        path: "/dashboard/display-blogs",
+        element: <Displayblog />,
       },
     ],
   },
