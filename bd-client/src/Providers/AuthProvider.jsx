@@ -95,7 +95,7 @@ const AuthProvider = ({ children }) => {
   const [identity, setIdentity] = useState("");
   useEffect(() => {
     if (user) {
-      getRole(user.email).then((data) => {
+      getRole(user?.email).then((data) => {
         // console.log(data);
         setIdentity(data.role);
       });

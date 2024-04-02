@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   // const location = useLocation();
   const emailRef = useRef();
-
+  console.log(identity);
   // const from = location?.state?.pathname || "/";
   //handle emailPasswordLogin
   const handleSubmit = (event) => {
