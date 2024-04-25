@@ -59,6 +59,7 @@ const TableBlogMange = ({ blog, refetch, index }) => {
             Update
           </Link>
         </td>
+        <h1></h1>
 
         <td
           // onClick={() => handleDeleteBlog(blog?._id)}
