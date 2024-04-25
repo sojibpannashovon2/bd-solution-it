@@ -147,7 +147,7 @@ async function run() {
       const result = await blogCollection.find().toArray();
       res.send(result);
     });
-
+    //add something
     /// delete conatact
 
     app.delete("/contact/:id", verifyJWT, async (req, res) => {
