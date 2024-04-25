@@ -6,7 +6,7 @@ import { GrLogout } from "react-icons/gr";
 import { FcContacts, FcSettings } from "react-icons/fc";
 import { AiOutlineBars } from "react-icons/ai";
 // import { BsBookFill, BsFillHouseAddFill } from 'react-icons/bs'
-
+//New thing added
 import {
   FaEnvelope,
   FaEye,
